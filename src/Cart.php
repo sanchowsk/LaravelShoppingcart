@@ -359,7 +359,7 @@ class Cart
         $this->getConnection()->table($this->getTableName())->insert([
             'identifier' => $identifier,
             'instance' => $this->currentInstance(),
-            'content' => serialize($content)
+            'content' => base64_encode(serialize($content))
         ]);
 
         $this->events->dispatch('cart.stored');
@@ -380,7 +380,7 @@ class Cart
         $stored = $this->getConnection()->table($this->getTableName())
             ->where('identifier', $identifier)->first();
 
-        $storedContent = unserialize($stored->content);
+        $storedContent = unserialize(base64_decode($stored->content));
 
         $currentInstance = $this->currentInstance();
 
